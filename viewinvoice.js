@@ -7,8 +7,7 @@ $(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
   const invoiceId = urlParams.get('id');
 
-
-  fetch(`https://localhost:7042/invoice/list/${invoiceId}`,
+  fetch(`https://localhost:7042/invoice/${invoiceId}`,
     {
       method: 'GET',
       headers: headers
@@ -16,18 +15,17 @@ $(document).ready(function () {
     .then(response => response.json())
     .then(data => {
       editData = data;
-      console.log(data)
-      $('#invoiceId').text(data.id);
-      $('#partyName').text(data.partyName);
-      $('#invoiceDate').text(data.date);
-      let grandTotal = 0;
+      $('#invoiceId').text(data[0].invoiceId);
+      $('#partyName').text(data[0].partyName);
+      $('#invoiceDate').text(data[0].date);
+      var grandTotal = 0;
 
       data.forEach(x => {
         $('#productsBody').append(`
         <tr>
-            <td>${x.productId}</td>
+            <td>${x.productid}</td>
             <td>${x.productName}</td>
-            <td>${x.quantity}</td>
+            <td>${x.qty}</td>
             <td>${x.rate}</td>
             <td>${x.total}</td>
         </tr>
@@ -35,8 +33,6 @@ $(document).ready(function () {
 
         grandTotal += x.total;
       })
-
-
 
       $('#productsBody').append(`
                 <tr>
@@ -54,9 +50,9 @@ $(document).ready(function () {
         editData.products.push({
           productId: $('#productDropdown').val(),
           productName: $('#productDropdown option:selected').text(),
-          quantity: parseFloat($('#quantity').val()),
-          rate: parseFloat($('#productRate').val()),
-          total: parseFloat($('#quantity').val()) * parseFloat($('#productRate').val())
+          quantity: parseInt($('#quantity').val()),
+          rate: parseInt($('#productRate').val()),
+          total: parseInt($('#quantity').val()) * parseInt($('#productRate').val())
         });
 
 
@@ -70,7 +66,7 @@ $(document).ready(function () {
         data: editData,
         columns: [
           { data: 'productName', title: 'Product Name' },
-          { data: 'quantity', title: 'Quantity' },
+          { data: 'qty', title: 'Quantity' },
           { data: 'rate', title: 'Rate' },
           { data: 'total', title: 'Total' },
           {
@@ -99,7 +95,7 @@ $(document).ready(function () {
     editData.products.splice(index, 1);
     updateDataTable();
 
-    $('#quantity').val(rowData.quantity);
+    $('#quantity').val(rowData.qty);
     $('#productRate').val(rowData.rate);
 
     var productNameToSelect = rowData.productName; 
@@ -113,34 +109,29 @@ $(document).ready(function () {
   });
 
   $('#invoiceTable').on('click', '.delete-btn', function () {
-    var row = $('#invoiceTable').DataTable().row($(this).parents('tr'));
+    var row = $('#invoiceTable').DataTable({}).row($(this).parents('tr'));
     var index = row.index();
     row.remove().draw();
-    editData.products.splice(index, 1);
+    editData.splice(index, 1);
     updateDataTable();
 
   });
 
   $('#GenerateInvoice').click(function () {
-    console.log(editData);
+
 
     $.ajax({
       url: `https://localhost:7042/Invoice/${editData.id}`,
       type: 'DELETE',
-      // headers: {
-      //   'Authorization': 'Bearer ' + localStorage.getItem('token')
-      // },
+      
       success: function () {
         $.ajax({
           url: 'https://localhost:7042/Invoice',
           type: 'POST',
-          // headers: {
-          //   'Authorization': 'Bearer ' + localStorage.getItem('token')
-          // },
+          
           contentType: 'application/json',
           data: JSON.stringify(editData),
           success: function (data) {
-            console.log(data);
             window.location.href = `viewInvoice.html?id=${data}`;
           },
           error: function (error) {
@@ -162,8 +153,13 @@ $("#PrintInvoice").click(function (e) {
   printInvoice();
 });
 
-function printInvoice(){
+function printInvoice() {
+  const printContents = document.getElementById('print').innerHTML;
+  const originalContents = document.body.innerHTML;
+  document.body.innerHTML = printContents;
   window.print();
+  document.body.innerHTML = originalContents;
+  location.reload();
 }
 
 $("#EditInvoice").click(function (e) {
@@ -172,88 +168,80 @@ $("#EditInvoice").click(function (e) {
 });
 
 
-// function editInvoice() {
-//   $('#editModel').show();
-//   $('#overlay').show();
+function editInvoice() {
+  $('#editModel').show();
+  $('#overlay').show();
 
-//   fetch('https://localhost:7042/AssignParty',
-//     {
-//       method: 'GET',
-//       headers: headers
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//       const uniqueParties = new Set();
-//       data.forEach(party => {
-//         if (!uniqueParties.has(party.partyId)) {
-//           uniqueParties.add(party.partyId);
-//           $('#partyDropdown').append(`<option value="${party.partyId}">${party.partyName}</option>`);
-//         }
-//       });
-//       $('#partyDropdown').val(editData.partyId);
-//       $('#partyDropdown').attr('disabled', true);
-//       loadInvoiceProducts();
+  fetch('https://localhost:7042/AssignParty',
+    {
+      method: 'GET',
+      headers: headers
+    })
+    .then(response => response.json())
+    .then(data => {
+      const uniqueParties = new Set();
+      data.forEach(party => {
+        if (!uniqueParties.has(editData.partyId)) {
+          uniqueParties.add(editData.partyId);
+          $('#partyDropdown').append(`<option value="${editData.partyId}">${editData.partyName}</option>`);
+        }
+      });
+      $('#partyDropdown').val(editData.partyId);
+      $('#partyDropdown').attr('disabled', true);
+      loadInvoiceProducts();
 
-//     })
-//     .catch(error => console.error('Error fetching party data:', error));
+    })
+    .catch(error => console.error('Error fetching party data:', error));
 
-//   function fetchInvoiceProductRate(productId) {
-//     fetch(`https://localhost:7042/invoice/InvoiceProductRate/${productId}`,
-//       {
-//         method: 'GET',
-//         headers: headers
-//       })
-//       .then(response => response.json())
-//       .then(data => {
-//         $('#productRate').val(data);
-//       });
-//   }
+  
+    $('#productRate').val(data.rate);
 
-//   function loadInvoiceProductRate() {
-//     let productId = $('#productDropdown').val();
-//     fetchInvoiceProductRate(productId);
-//   }
+  function loadInvoiceProductRate() {
+    let productId = $('#productDropdown').val();
+    fetchInvoiceProductRate(productId);
+  }
 
 
-//   $('#productDropdown').change(function () {
-//     $('#productRate').empty();
-//     let productId = $('#productDropdown').val();
-//     fetchInvoiceProductRate(productId);
+  $('#productDropdown').change(function () {
+    $('#productRate').empty();
+    let productId = $('#productDropdown').val();
+    fetchInvoiceProductRate(productId);
 
-//   });
+  });
 
 
-//   function loadInvoiceProducts() {
-//     let partyId = $('#partyDropdown').val();
-//     console.log('load invoice', partyId);
-//     fetchInvoiceProducts(partyId);
-//   }
+  function loadInvoiceProducts() {
+    let partyId = $('#partyDropdown').val();
+    console.log('load invoice', partyId);
+    fetchInvoiceProducts(partyId);
+  }
 
-//   $('#partyDropdown').change(function () {
-//     $('#productDropdown').empty();
-//     let partyId = $('#partyDropdown').val();
-//     fetchInvoiceProducts(partyId);
-//   });
+  $('#partyDropdown').change(function () {
+    $('#productDropdown').empty();
+    let partyId = $('#partyDropdown').val();
+    fetchInvoiceProducts(partyId);
+  });
 
-//   function fetchInvoiceProducts(partyId) {
-//     fetch(`https://localhost:7042/invoice/InvoiceProducts/${partyId}`,
-//     {
-//       method: 'GET',
-//       headers: headers
-//     })
-//       .then(response => response.json())
-//       .then(data => {
-//         $('#productDropdown').empty();
-//         data.forEach(product => {
-//           $('#productDropdown').append(`<option value="${product.productId}">${product.productName}</option>`);
-//         });
-//         loadInvoiceProductRate();
-//       });
-//   }
+  function fetchInvoiceProducts(partyId) {
+    fetch(`https://localhost:7042/invoice/InvoiceProducts/${partyId}`,
+    {
+      method: 'GET',
+      headers: headers
+    })
+      .then(response => response.json())
+      .then(data => {
+        $('#productDropdown').empty();
+        data.forEach(product => {
+          $('#productDropdown').append(`<option value="${product.productId}">${product.productName}</option>`);
+        });
+        loadInvoiceProductRate();
+      });
+  }
 
-//   $('#partyDropdown').val(editData.partyId);
-//   $('#partyDropdown').attr('disabled', true);
-// }
+  $('#partyDropdown').val(editData.partyId);
+  $('#partyDropdown').attr('disabled', true);
+}
+
 
 
 function updateDataTable() {
@@ -263,5 +251,5 @@ function updateDataTable() {
     return total + (item.quantity * item.rate);
   }, 0);
 
-  $('#grandTotal').text(grandTotal.toFixed(2));
+  $('#grandTotal').text(grandTotal);
 }

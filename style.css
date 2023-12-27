@@ -5,3 +5,8 @@ button{
 .container{
     margin-top: 1em;
 }
+
+.modal{
+    --bs-modal-width: 1000px;
+}
+

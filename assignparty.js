@@ -45,9 +45,7 @@ async function fillPartyData(selectParty){
   Partydata.forEach(element => {
       var html1=` <option value="${element.partyId}">${element.partyName}</option>`;
       document.getElementById(selectParty).insertAdjacentHTML("beforeend",html1)
-  })
-
-   
+  }) 
 }
 
 
