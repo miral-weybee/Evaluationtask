@@ -1,7 +1,14 @@
 const partydata = document.getElementById("partydata");
 const modaloldpartyname = document.getElementById("modaloldpartyname");
-
-
+const token = localStorage.getItem('token');
+const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+};
+const options = {
+    method: 'GET',
+    headers: headers
+};
 var data , partyid;
 
 async function loadData(){
@@ -28,7 +35,8 @@ async function loadData(){
 loadData();
 
 async function getPartyData() {
-    const response = await fetch("https://localhost:7042/party")
+    
+    const response = await fetch("https://localhost:7042/party", options)
     const data = await response.json();
     return data;
 }
@@ -41,9 +49,7 @@ function addDataFromModal(){
             body: JSON.stringify({
               partyName: partyname
             }),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
+            headers: headers
           })
             .then((response) => response.json())
             .then((json) => console.log(json));
@@ -58,10 +64,9 @@ function addDataFromModal(){
 async function editParty(id){
     id =  id.slice(9);
     partyid = id;
-    const response = await fetch(`https://localhost:7042/Party/${id}`);
+    const response = await fetch(`https://localhost:7042/Party/${id}`,options);
     data = await response.json();
     modaloldpartyname.innerText = data.partyName;
-
 }
 
 
@@ -74,9 +79,7 @@ function editDataFromModal() {
             partyId : partyid,
             partyName: partyname
         }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
+        headers:headers
     })
         .then(res => {
             if(res.ok){
@@ -98,9 +101,7 @@ async function deleteParty(id){
     if(ans){
         const response = await fetch(`https://localhost:7042/Party/${id}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers:headers,
             body: null
         });
         location.reload();

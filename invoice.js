@@ -1,11 +1,16 @@
 const invoicedata = document.getElementById("invoicedata");
 
-// var data , invoiceid;
+var data , invoiceid;
 
+const token = localStorage.getItem('token');
 const headers = {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
 };
-
+const options = {
+    method: 'GET',
+    headers: headers,
+};
 $('#addinvoicebtn').click(function(){
     let formData = {
         products: []
@@ -50,7 +55,6 @@ $('#addinvoicebtn').click(function(){
     });
 
     $('#GenerateInvoice').click(function () {
-        console.log(formData);
 
         $.ajax({
             url: 'https://localhost:7042/Invoice',
@@ -58,10 +62,11 @@ $('#addinvoicebtn').click(function(){
             headers: headers,
             data: JSON.stringify({
                 partyId: formData.partyId,
-                invoiceProducts: formData.products
+                Products: formData.products
               }),
             success: function (data) {
                console.log(data)
+               location.reload();
             },
             error: function (error) {
                 console.log(error);
@@ -170,7 +175,7 @@ async function loadData(){
  loadData();
 
 async function getInvoiceData() {
-    const response = await fetch("https://localhost:7042/invoice")
+    const response = await fetch("https://localhost:7042/invoice",options)
     const data = await response.json();
     return data;
 }
@@ -183,7 +188,7 @@ function viewData(id){
 
 async function fillPartyData(selectParty){
     document.getElementById(selectParty).innerHTML ="";
-    const partydd = await fetch("https://localhost:7042/Party");
+    const partydd = await fetch("https://localhost:7042/Party",options);
     Partydata = await partydd.json();
     let first = `<option selected>Select Party</option>`
     document.getElementById(selectParty).insertAdjacentHTML("beforeend",first)
@@ -201,9 +206,7 @@ async function deleteInvoice(id){
     if(ans){
         const response = await fetch(`https://localhost:7042/Invoice/${id}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: headers,
             body: null
         });
         location.reload();

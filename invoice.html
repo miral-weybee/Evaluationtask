@@ -28,7 +28,7 @@
                 <ul id="topnav" class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
                     style="--bs-scroll-height: 100px;">
                     <li class="nav-item">
-                        <a id="navparty" class="nav-link " aria-current="page" href="index.html">Party</a>
+                        <a id="navparty" class="nav-link " aria-current="page" href="party.html">Party</a>
                     </li>
                     <li class="nav-item">
                         <a id="navproduct" class="nav-link" href="product.html">Product</a>
@@ -44,12 +44,13 @@
                     </li>
                 </ul>
             </div>
-            <button class="btn btn-outline-danger ml-auto" type="submit">Logout</button>
+            <button class="btn btn-outline-danger ml-auto" id="logout">Logout</button>
         </div>
     </nav>
     <div class="container" id="topbtn">
         <div class="col-sm-10 ">
-            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddPartyModal" id="addinvoicebtn">Add
+            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddPartyModal"
+                id="addinvoicebtn">Add
                 Invoice</button>
         </div>
         <table class="table table-striped" id="tbl">
@@ -67,38 +68,16 @@
         </table>
     </div>
 
-    <!-- edit modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Edit Invoice</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <label>Old Party Name :</label>
-                    <span type="text" id="modaloldpartyname"></span><br>
-                    <label>Enter New Party Name :</label>
-                    <input type="text" id="modalpartyname" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="modleditbtn"
-                        onclick="editDataFromModal()">Edit</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- add modal -->
     <div class="modal fade" id="AddPartyModal" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="AddPartyModalLabel" aria-hidden="true"  data-bs-backdrop="static" >
+        aria-labelledby="AddPartyModalLabel" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="AddPartyModalLabel">Create Invoice</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closebtn"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        id="closebtn"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container table-container">
@@ -114,30 +93,32 @@
                                         <div class="product-field">
                                             <div class="mb-3">
                                                 <label for="productDropdown" class="form-label">Product</label>
-                                                <select class="form-select product-select" id="productDropdown" name="productId"
-                                                    required>
+                                                <select class="form-select product-select" id="productDropdown"
+                                                    name="productId" required>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="productRate" class="form-label">Rate</label>
-                                                <input type="number" class="form-control rate-input" id="productRate" name="productRate"
-                                                    required>
+                                                <input type="number" class="form-control rate-input" id="productRate"
+                                                    name="productRate" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="quantity" class="form-label">Quantity</label>
-                                                <input type="number" class="form-control rate-input" id="quantity" name="quantity"
-                                                    required>
+                                                <input type="number" class="form-control rate-input" id="quantity"
+                                                    name="quantity" required>
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-secondary" id="addProductBtn">Add Product</button>
+                                    <button type="submit" class="btn btn-secondary" id="addProductBtn">Add
+                                        Product</button>
                                 </form>
                             </div>
-                
+
                             <div class="col-md-8">
                                 <div class="table-container">
-                                    <table id="invoiceTable" class="table table-striped table-bordered" style="width:100%">
-                
+                                    <table id="invoiceTable" class="table table-striped table-bordered"
+                                        style="width:100%">
+
                                     </table>
                                     <div>Grand Total: <span id="grandTotal">0.00</span> </div>
                                 </div>
@@ -148,16 +129,16 @@
                 </div>
             </div>
         </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 
-        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-
-        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
 
-        <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="/Evaluationtask/invoice.js"></script>
-
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/Evaluationtask/invoice.js"></script>
+    <script src="authorization.js"></script>
 
 </body>
 

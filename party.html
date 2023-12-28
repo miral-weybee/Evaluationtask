@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +26,7 @@
             <div class="collapse navbar-collapse" id="navbarScroll">
                 <ul id="topnav" class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                     <li class="nav-item">
-                        <a id="navparty" class="nav-link " aria-current="page" href="party.html">Party</a>
+                        <a id="navparty" class="nav-link active" aria-current="page" href="party.html">Party</a>
                     </li>
                     <li class="nav-item">
                         <a id="navproduct" class="nav-link" href="product.html">Product</a>
@@ -33,7 +35,7 @@
                         <a id="navassignparty" class="nav-link" href="assignparty.html">AssignParty</a>
                     </li>
                     <li class="nav-item">
-                        <a id="navproductrate" class="nav-link active" href="productrate.html">Product Rate</a>
+                        <a id="navproductrate" class="nav-link" href="productrate.html">Product Rate</a>
                     </li>
                     <li class="nav-item">
                         <a id="navinvoice" class="nav-link" href="invoice.html">Invoice</a>
@@ -45,19 +47,17 @@
     </nav>
     <div class="container" id="topbtn">
         <div class="col-sm-10 ">
-            <button type="submit" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#AddProductRateModal">Add New Product Rate</button>
+            <button type="submit" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#AddPartyModal">Add Party</button>
         </div>
         <table class="table" id="tbl">
             <thead>
                 <tr>
                     <th scope="col">Id</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Product Rate</th>
-                    <th scope="col">Date Of Rate</th>
+                    <th scope="col">Party Name</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
-            <tbody id="productratedata">
+            <tbody id="partydata">
 
             </tbody>
         </table>
@@ -69,25 +69,14 @@
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Edit Product Rate</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Edit Party Name</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="detail">
-                    <ul ><br/>
-                        <select class="form-select" aria-label="Default select example" id="selectProductRatee"
-                            style="width: 20vw; margin-left: 10px;">
-                        </select>
-                        <br>
-                        <br>
-                        <lable style="width: 10vw; margin-left: 10px;">Rate: </lable>
-                        <input type="number" placeholder="rate" style="width: 10vw; margin-left: 10px;"
-                            id="ratee" min="0"/>
-                            <br /><br />
-                        <lable style="width: 10vw; margin-left: 10px;">DateTime: </lable>
-                        <input type="date" id="datee" style="width: 10vw; margin-left: 10px;">
-                    </ul>
-                </div>
+                <label>Old Party Name :</label>
+                <span type="text" id="modaloldpartyname"></span><br>
+                <label>Enter New Party Name :</label>
+                <input type="text" id="modalpartyname" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -98,30 +87,17 @@
 </div>
 
 <!-- Modal Add -->
-<div class="modal fade" id="AddProductRateModal" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="AddProductRateModalLabel" aria-hidden="true">
+<div class="modal fade" id="AddPartyModal" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="AddPartyModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" >
             <div class="modal-header">
-                <h5 class="modal-title" id="AddProductRateModalLabel">Add New Product Rate</h5>
+                <h5 class="modal-title" id="AddPartyModalLabel">Add New Party</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="detail">
-                    <ul ><br/>
-                        <select class="form-select" aria-label="Default select example" id="selectProductRate"
-                            style="width: 20vw; margin-left: 10px;">
-                        </select>
-                        <br>
-                        <br>
-                        <lable style="width: 10vw; margin-left: 10px;">Rate: </lable>
-                        <input type="number" placeholder="rate" style="width: 10vw; margin-left: 10px;"
-                            id="rate" min="0"/>
-                            <br /><br />
-                        <lable style="width: 10vw; margin-left: 10px;">DateTime: </lable>
-                        <input type="date" id="date" style="width: 10vw; margin-left: 10px;">
-                    </ul>
-                </div>
+                <label>Enter Party Name :</label>
+                <input type="text" id="modalnewpartyname" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -137,7 +113,7 @@
  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
  integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
  </script>
- <script src="/Evaluationtask/productrate.js"></script>
+ <script src="/Evaluationtask/party.js"></script>
  <script src="/Evaluationtask/authorization.js"></script>
 </body>
 

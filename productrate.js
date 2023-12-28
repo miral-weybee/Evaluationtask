@@ -1,6 +1,14 @@
 const productratedata = document.getElementById("productratedata");
 
-
+const token = localStorage.getItem('token');
+const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+};
+const options = {
+    method: 'GET',
+    headers: headers,
+};
 var data , productrateid;
 
 async function loadData(){
@@ -30,14 +38,14 @@ async function loadData(){
 loadData();
 
 async function getProductRateData() {
-    const response = await fetch("https://localhost:7042/productrate")
+    const response = await fetch("https://localhost:7042/productrate",options)
     const data = await response.json();
     return data;
 }
 
 async function fillProductData(selectProduct){
     document.getElementById(selectProduct).innerHTML = '';
-    const products = await fetch("https://localhost:7042/Product");
+    const products = await fetch("https://localhost:7042/Product",options);
     Productdata = await products.json();
     let first = `<option selected>Select Product</option>`
     document.getElementById(selectProduct).insertAdjacentHTML("beforeend",first)
@@ -59,9 +67,7 @@ function addDataFromModal(){
                 rate:rateOfProduct,
                 dateOfRate:date
               }),
-              headers: {
-                "Content-type": "application/json; charset=UTF-8"
-              }
+              headers: headers
           })
           
             location.reload();
@@ -74,7 +80,7 @@ function addDataFromModal(){
 async function editProductRate(id){
     id =  id.slice(15);
     productrateid = id;
-    const response = await fetch(`https://localhost:7042/ProductRate/${id}`);
+    const response = await fetch(`https://localhost:7042/ProductRate/${id}`,options);
     data = await response.json();
     fillProductData('selectProductRatee');
     document.getElementById('ratee').value=data.rate;
@@ -95,9 +101,7 @@ function editDataFromModal() {
                 rate : rateOfProduct,
                 dateOfRate : date
             }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
+            headers: headers
         })
             location.reload();
     }else{
@@ -112,9 +116,7 @@ async function deleteProductRate(id){
     if(ans){
         const response = await fetch(`https://localhost:7042/ProductRate/${id}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: headers,
             body: null
         });
         location.reload();

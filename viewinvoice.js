@@ -1,12 +1,13 @@
-let editData;
+var editData;
+const token = localStorage.getItem('token');
 const headers = {
-  'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
 };
 
 $(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
   const invoiceId = urlParams.get('id');
-
   fetch(`https://localhost:7042/invoice/${invoiceId}`,
     {
       method: 'GET',
@@ -15,17 +16,18 @@ $(document).ready(function () {
     .then(response => response.json())
     .then(data => {
       editData = data;
-      $('#invoiceId').text(data[0].invoiceId);
-      $('#partyName').text(data[0].partyName);
-      $('#invoiceDate').text(data[0].date);
+     
+      $('#invoiceId').text(data.invoiceId);
+      $('#partyName').text(data.partyName);
+      $('#invoiceDate').text(data.date);
       var grandTotal = 0;
 
-      data.forEach(x => {
+      data.products.forEach(x => {
         $('#productsBody').append(`
         <tr>
-            <td>${x.productid}</td>
+            <td>${x.productId}</td>
             <td>${x.productName}</td>
-            <td>${x.qty}</td>
+            <td>${x.quantity}</td>
             <td>${x.rate}</td>
             <td>${x.total}</td>
         </tr>
@@ -61,12 +63,11 @@ $(document).ready(function () {
       });
 
       
-
       $('#invoiceTable').DataTable({
-        data: editData,
+        data: editData.products,
         columns: [
           { data: 'productName', title: 'Product Name' },
-          { data: 'qty', title: 'Quantity' },
+          { data: 'quantity', title: 'Quantity' },
           { data: 'rate', title: 'Rate' },
           { data: 'total', title: 'Total' },
           {
@@ -79,72 +80,59 @@ $(document).ready(function () {
         ]
       });
 
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+      $('#invoiceTable').on('click', '.edit-btn', function () {
+        var row = $('#invoiceTable').DataTable().row($(this).parents('tr'));
+        var rowData = row.data();
+        var index = row.index();
+    
+        row.remove().draw();
+        editData.products.splice(index, 1);
+        updateDataTable();
+    
+        $('#quantity').val(rowData.qty);
+        $('#productRate').val(rowData.rate);
+    
+        var productNameToSelect = rowData.productName; 
+        $('#productDropdown option').each(function () {
+          if ($(this).text() === productNameToSelect) {
+            $(this).prop('selected', true);
+          } else {
+            $(this).prop('selected', false);
+          }
+        });
+      });
+    
+      $('#invoiceTable').on('click', '.delete-btn', function () {
+        var row = $('#invoiceTable').DataTable({}).row($(this).parents('tr'));
+        var index = row.index();
+        row.remove().draw();
+        editData.products.splice(index, 1);
+        updateDataTable();
+      });
 
-
-
-  $('#invoiceTable').on('click', '.edit-btn', function () {
-    var row = $('#invoiceTable').DataTable().row($(this).parents('tr'));
-    var rowData = row.data();
-    var index = row.index();
-
-    row.remove().draw();
-    editData.products.splice(index, 1);
-    updateDataTable();
-
-    $('#quantity').val(rowData.qty);
-    $('#productRate').val(rowData.rate);
-
-    var productNameToSelect = rowData.productName; 
-    $('#productDropdown option').each(function () {
-      if ($(this).text() === productNameToSelect) {
-        $(this).prop('selected', true);
-      } else {
-        $(this).prop('selected', false);
-      }
-    });
-  });
-
-  $('#invoiceTable').on('click', '.delete-btn', function () {
-    var row = $('#invoiceTable').DataTable({}).row($(this).parents('tr'));
-    var index = row.index();
-    row.remove().draw();
-    editData.splice(index, 1);
-    updateDataTable();
-
-  });
-
-  $('#GenerateInvoice').click(function () {
-
-
-    $.ajax({
-      url: `https://localhost:7042/Invoice/${editData.id}`,
-      type: 'DELETE',
-      
-      success: function () {
+      $('#EditGenerateInvoice').click(function () {
+        console.log(editData);
         $.ajax({
-          url: 'https://localhost:7042/Invoice',
-          type: 'POST',
-          
+          url: `https://localhost:7042/Invoice/edit/${editData.invoiceId}`,
+          type: 'PUT',
+          headers: headers,
           contentType: 'application/json',
-          data: JSON.stringify(editData),
-          success: function (data) {
-            window.location.href = `viewInvoice.html?id=${data}`;
+          data: JSON.stringify({
+            invoiceId: editData.invoiceId,
+            products: editData.products
+          }),
+          success: function () {
+           location.reload();
           },
           error: function (error) {
             console.log(error);
           }
         });
-      },
-      error: function (error) {
-        console.log(error);
-      }
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
     });
-  });
-
 });
 
 
@@ -169,8 +157,8 @@ $("#EditInvoice").click(function (e) {
 
 
 function editInvoice() {
-  $('#editModel').show();
-  $('#overlay').show();
+  $('#staticBackdrop').modal('show');
+  // updateDataTable();
 
   fetch('https://localhost:7042/AssignParty',
     {
@@ -189,30 +177,38 @@ function editInvoice() {
       $('#partyDropdown').val(editData.partyId);
       $('#partyDropdown').attr('disabled', true);
       loadInvoiceProducts();
-
+      $('#productRate').val(data.rate);
     })
     .catch(error => console.error('Error fetching party data:', error));
 
   
-    $('#productRate').val(data.rate);
 
   function loadInvoiceProductRate() {
     let productId = $('#productDropdown').val();
     fetchInvoiceProductRate(productId);
   }
 
+  function fetchInvoiceProductRate(productId) {
+    fetch(`https://localhost:7042/invoice/InvoiceProductRate/${productId}`,
+      {
+        method: 'GET',
+        headers: headers
+      })
+      .then(response => response.json())
+      .then(data => {
+        $('#productRate').val(data);
+      });
+  }
 
   $('#productDropdown').change(function () {
     $('#productRate').empty();
     let productId = $('#productDropdown').val();
     fetchInvoiceProductRate(productId);
-
   });
 
 
   function loadInvoiceProducts() {
     let partyId = $('#partyDropdown').val();
-    console.log('load invoice', partyId);
     fetchInvoiceProducts(partyId);
   }
 
@@ -245,6 +241,7 @@ function editInvoice() {
 
 
 function updateDataTable() {
+  
   $('#invoiceTable').DataTable().clear().rows.add(editData.products).draw();
 
   const grandTotal = editData.products.reduce((total, item) => {

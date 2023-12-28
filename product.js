@@ -1,6 +1,14 @@
 const productdata = document.getElementById("productdata");
 const modaloldproductname = document.getElementById("modaloldproductname");
-
+const token = localStorage.getItem('token');
+const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+};
+const options = {
+    method: 'GET',
+    headers: headers,
+};
 
 var data , productid;
 
@@ -24,7 +32,7 @@ async function loadData(){
 loadData();
 
 async function getProductData() {
-    const response = await fetch("https://localhost:7042/product")
+    const response = await fetch("https://localhost:7042/product",options)
     const productdata = await response.json();
     return productdata;
 }
@@ -37,9 +45,7 @@ function addDataFromModal(){
             body: JSON.stringify({
               productName: productname
             }),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
+            headers: headers
           })
             
           
@@ -53,7 +59,7 @@ function addDataFromModal(){
 async function editProduct(id){
     id =  id.slice(11);
     productid = id;
-    const response = await fetch(`https://localhost:7042/Product/${id}`);
+    const response = await fetch(`https://localhost:7042/Product/${id}`,options);
     data = await response.json();
     modaloldproductname.innerText = data.productName;
 
@@ -68,9 +74,7 @@ function editDataFromModal() {
             productId : productid,
             productName: productname
         }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
+        headers: headers
     })
         .then(res => {
             if(res.ok){
@@ -91,9 +95,7 @@ async function deleteProduct(id){
     if(ans){
         const response = await fetch(`https://localhost:7042/Product/${id}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: headers,
             body: null
         });
         location.reload();

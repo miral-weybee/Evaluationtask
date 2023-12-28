@@ -1,6 +1,14 @@
 const assignpartydata = document.getElementById("assignpartydata");
 const modaloldassignpartyname = document.getElementById("modaloldassignpartyname");
-
+const token = localStorage.getItem('token');
+const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+};
+const options = {
+    method: 'GET',
+    headers: headers,
+};
 
 var data , assignpartyid;
 
@@ -31,14 +39,14 @@ async function loadData(){
 loadData();
 
 async function getAssignPartyData() {
-    const response = await fetch("https://localhost:7042/assignparty")
+    const response = await fetch("https://localhost:7042/assignparty",options)
     const data = await response.json();
     return data;
 }
 
 async function fillPartyData(selectParty){
     document.getElementById(selectParty).innerHTML ="";
-    const partydd = await fetch("https://localhost:7042/Party");
+    const partydd = await fetch("https://localhost:7042/Party",options);
     Partydata = await partydd.json();
     let first = `<option selected>Select Party</option>`
     document.getElementById(selectParty).insertAdjacentHTML("beforeend",first)
@@ -52,7 +60,7 @@ async function fillPartyData(selectParty){
 
 async function fillProductData(selectProduct){
     document.getElementById(selectProduct).innerHTML = '';
-    const products = await fetch("https://localhost:7042/Product");
+    const products = await fetch("https://localhost:7042/Product",options);
     Productdata = await products.json();
     let first = `<option selected>Select Product</option>`
     document.getElementById(selectProduct).insertAdjacentHTML("beforeend",first)
@@ -74,9 +82,7 @@ function addDataFromModal() {
                 partyId: PartyId,
                 productId: ProductId
             }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
+            headers: headers
         })
         location.reload();
     }
@@ -108,9 +114,7 @@ function editDataFromModal() {
                 partyId: PartyId,
                 productId:ProductId
             }),
-              headers: {
-                  "Content-type": "application/json; charset=UTF-8"
-              }
+              headers:headers
         })
             .then(res => {
                 if(res.ok){
@@ -135,9 +139,7 @@ async function deleteAssignParty(id){
     if(ans){
         const response = await fetch(`https://localhost:7042/AssignParty/${id}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: headers,
             body: null
         });
         location.reload();
