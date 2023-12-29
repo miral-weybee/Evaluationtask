@@ -51,7 +51,7 @@ async function fillPartyData(selectParty){
     let first = `<option selected>Select Party</option>`
     document.getElementById(selectParty).insertAdjacentHTML("beforeend",first)
   Partydata.forEach(element => {
-      var html1=` <option value="${element.partyId}">${element.partyName}</option>`;
+      var html1=` <option value=${element.partyId}>${element.partyName}</option>`;
       document.getElementById(selectParty).insertAdjacentHTML("beforeend",html1)
   }) 
 }
@@ -65,7 +65,7 @@ async function fillProductData(selectProduct){
     let first = `<option selected>Select Product</option>`
     document.getElementById(selectProduct).insertAdjacentHTML("beforeend",first)
     Productdata.forEach(element => {
-        var html=` <option value="${element.productId}">${element.productName}</option>`;
+        var html=` <option value=${element.productId}>${element.productName}</option>`;
         document.getElementById(selectProduct).insertAdjacentHTML("beforeend",html);
     })
 }
@@ -92,13 +92,12 @@ function addDataFromModal() {
 }
 
 async function editAssignParty(id){
-    document.getElementById("selectPartye").innerHTML = '';
-    document.getElementById("selectProducte").innerHTML = '';
     id =  id.slice(9);
+    document.getElementById("selectPartye").innerHTML = ``;
+    document.getElementById("selectProducte").innerHTML = '';
     assignpartyid = id;
     fillPartyData('selectPartye');
     fillProductData('selectProducte');
-
 }
 
 

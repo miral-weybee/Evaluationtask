@@ -73,7 +73,7 @@ $(document).ready(function () {
           {
             title: 'Action',
             render: function (data, type, row) {
-              return '<button class="btn btn-warning btn-sm edit-btn">Edit</button> ' +
+              return '<button class="btn btn-info btn-sm edit-btn">Edit</button> ' +
                 '<button class="btn btn-danger btn-sm delete-btn">Delete</button>';
             }
           }
@@ -158,7 +158,7 @@ $("#EditInvoice").click(function (e) {
 
 function editInvoice() {
   $('#staticBackdrop').modal('show');
-  // updateDataTable();
+  updateDataTable();
 
   fetch('https://localhost:7042/AssignParty',
     {
@@ -243,7 +243,6 @@ function editInvoice() {
 function updateDataTable() {
   
   $('#invoiceTable').DataTable().clear().rows.add(editData.products).draw();
-
   const grandTotal = editData.products.reduce((total, item) => {
     return total + (item.quantity * item.rate);
   }, 0);

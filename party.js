@@ -9,10 +9,10 @@ const options = {
     method: 'GET',
     headers: headers
 };
-var data , partyid;
+var data, partyid;
 
-async function loadData(){
-   partydata.innerHTML = '';
+async function loadData() {
+    partydata.innerHTML = '';
     data = await getPartyData();
 
     data.forEach(element => {
@@ -35,36 +35,36 @@ async function loadData(){
 loadData();
 
 async function getPartyData() {
-    
+
     const response = await fetch("https://localhost:7042/party", options)
     const data = await response.json();
     return data;
 }
 
-function addDataFromModal(){
+function addDataFromModal() {
     let partyname = document.getElementById("modalnewpartyname").value;
-    if(partyname.trim().length !== 0 ){
+    if (partyname.trim().length !== 0) {
         fetch("https://localhost:7042/Party", {
             method: "POST",
             body: JSON.stringify({
-              partyName: partyname
+                partyName: partyname
             }),
             headers: headers
-          })
+        })
             .then((response) => response.json())
             .then((json) => console.log(json));
-          
-            location.reload();
+
+        location.reload();
     }
-    else{
+    else {
         alert("Party Name is not valid");
     }
 }
 
-async function editParty(id){
-    id =  id.slice(9);
+async function editParty(id) {
+    id = id.slice(9);
     partyid = id;
-    const response = await fetch(`https://localhost:7042/Party/${id}`,options);
+    const response = await fetch(`https://localhost:7042/Party/${id}`, options);
     data = await response.json();
     modaloldpartyname.innerText = data.partyName;
 }
@@ -76,32 +76,31 @@ function editDataFromModal() {
     fetch(`https://localhost:7042/Party/${partyid}`, {
         method: "PUT",
         body: JSON.stringify({
-            partyId : partyid,
+            partyId: partyid,
             partyName: partyname
         }),
-        headers:headers
+        headers: headers
     })
         .then(res => {
-            if(res.ok){
-                
+            if (res.ok) {
                 return res.json();
             }
             throw new Error("Something went wrong");
         })
         .catch(error => console.log(error.body));
 
-        $('.fade').hide();
-        location.reload();
+    $('.fade').hide();
+    location.reload();
 }
 
-async function deleteParty(id){
+async function deleteParty(id) {
     id = id.slice(11);
-   
+
     let ans = confirm("Are you sure you want to delete?");
-    if(ans){
+    if (ans) {
         const response = await fetch(`https://localhost:7042/Party/${id}`, {
             method: 'DELETE',
-            headers:headers,
+            headers: headers,
             body: null
         });
         location.reload();

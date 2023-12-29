@@ -31,7 +31,6 @@ $("#loginform").submit(function(e){
             Password: password
         };
 
-        console.log(formData);
         $.ajax({
             type: 'POST',
             url: 'https://localhost:7042/api/login/login',
@@ -40,9 +39,6 @@ $("#loginform").submit(function(e){
             success: function (response) {
                 const token = response.token;
                 localStorage.setItem('token', token);
-                console.log(token)
-                console.log('localstorage', localStorage.getItem('token'));
-                console.log('localstorage', localStorage.getItem('userEmail'));
                 location.href = '/Evaluationtask/party.html'
           },
             error: function (xhr, status, error) {

@@ -118,15 +118,17 @@
       <tbody id="productsBody"></tbody>
     </table>
 
+    
+  </div>
+  <div class="container">
     <button id="PrintInvoice" class="btn btn-info">Print Invoice</button>
     <button id="EditInvoice" class="btn btn-danger" data-toggle="modal" data-target="#staticBackdrop">Edit Invoice</button>
     <hr>
-  
   </div>
 
   <!-- edit modal -->
   <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  aria-labelledby="staticBackdropLabel" aria-hidden="true" style="--bs-modal-width: 1000px;">
   <div class="modal-dialog">
       <div class="modal-content">
           <div class="modal-header">
@@ -159,7 +161,7 @@
                       </div>
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-secondary" id="addProductBtn">Add Product</button>
+                  <button type="submit" class="btn btn-success" id="addProductBtn">Add Product</button>
                 </form>
               </div>
     
