@@ -1,8 +1,8 @@
 var editData;
 const token = localStorage.getItem('token');
 const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}`
 };
 
 $(document).ready(function () {
@@ -16,10 +16,11 @@ $(document).ready(function () {
     .then(response => response.json())
     .then(data => {
       editData = data;
-     
+      var datee = new Date(data.date.slice(0,10)).toLocaleString('en-GB');
+      datee = datee.slice(0,10)
       $('#invoiceId').text(data.invoiceId);
       $('#partyName').text(data.partyName);
-      $('#invoiceDate').text(data.date);
+      $('#invoiceDate').text(datee.toString());
       var grandTotal = 0;
 
       data.products.forEach(x => {
@@ -62,7 +63,7 @@ $(document).ready(function () {
         updateDataTable();
       });
 
-      
+
       $('#invoiceTable').DataTable({
         data: editData.products,
         columns: [
@@ -81,27 +82,34 @@ $(document).ready(function () {
       });
 
       $('#invoiceTable').on('click', '.edit-btn', function () {
+        $("#productedit").modal('show');
         var row = $('#invoiceTable').DataTable().row($(this).parents('tr'));
         var rowData = row.data();
         var index = row.index();
-    
-        row.remove().draw();
-        editData.products.splice(index, 1);
-        updateDataTable();
-    
-        $('#quantity').val(rowData.qty);
-        $('#productRate').val(rowData.rate);
-    
-        var productNameToSelect = rowData.productName; 
-        $('#productDropdown option').each(function () {
-          if ($(this).text() === productNameToSelect) {
-            $(this).prop('selected', true);
-          } else {
-            $(this).prop('selected', false);
-          }
-        });
+        $('#pproductDropdown').empty();
+        $('#pproductDropdown').append(`<option value="${rowData.productId}">${rowData.productName}</option>`);
+        $('#pproductDropdown').prop('disabled', true);
+        $('#pquantity').val(rowData.quantity);
+        $('#pproductRate').val(rowData.rate);
+
+        $('#editProductBtn').click(function (e) {
+          e.preventDefault();
+          editData.products.splice(index, 1);
+          editData.products.push({
+            productId: $('#pproductDropdown').val(),
+            productName: $('#pproductDropdown option:selected').text(),
+            quantity: parseInt($('#pquantity').val()),
+            rate: parseInt($('#pproductRate').val()),
+            total: parseInt($('#pquantity').val()) * parseInt($('#pproductRate').val())
+          });
+          $("#productedit").modal('hide');
+          row.remove().draw();
+          updateDataTable();
+        })
+
+
       });
-    
+
       $('#invoiceTable').on('click', '.delete-btn', function () {
         var row = $('#invoiceTable').DataTable({}).row($(this).parents('tr'));
         var index = row.index();
@@ -122,7 +130,7 @@ $(document).ready(function () {
             products: editData.products
           }),
           success: function () {
-           location.reload();
+            location.reload();
           },
           error: function (error) {
             console.log(error);
@@ -142,12 +150,8 @@ $("#PrintInvoice").click(function (e) {
 });
 
 function printInvoice() {
-  const printContents = document.getElementById('print').innerHTML;
-  const originalContents = document.body.innerHTML;
-  document.body.innerHTML = printContents;
-  window.print();
-  document.body.innerHTML = originalContents;
-  location.reload();
+  const element = document.querySelector('#print');
+  html2pdf(element);
 }
 
 $("#EditInvoice").click(function (e) {
@@ -181,7 +185,7 @@ function editInvoice() {
     })
     .catch(error => console.error('Error fetching party data:', error));
 
-  
+
 
   function loadInvoiceProductRate() {
     let productId = $('#productDropdown').val();
@@ -220,10 +224,10 @@ function editInvoice() {
 
   function fetchInvoiceProducts(partyId) {
     fetch(`https://localhost:7042/invoice/InvoiceProducts/${partyId}`,
-    {
-      method: 'GET',
-      headers: headers
-    })
+      {
+        method: 'GET',
+        headers: headers
+      })
       .then(response => response.json())
       .then(data => {
         $('#productDropdown').empty();
@@ -241,7 +245,7 @@ function editInvoice() {
 
 
 function updateDataTable() {
-  
+
   $('#invoiceTable').DataTable().clear().rows.add(editData.products).draw();
   const grandTotal = editData.products.reduce((total, item) => {
     return total + (item.quantity * item.rate);

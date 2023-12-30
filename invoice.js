@@ -65,11 +65,10 @@ $('#addinvoicebtn').click(function(){
                 Products: formData.products
               }),
             success: function (data) {
-               console.log(data)
                location.reload();
             },
             error: function (error) {
-                console.log(error);
+                location.reload();
             }
         });
 
@@ -146,10 +145,11 @@ async function loadData(){
      data = await getInvoiceData();
      let tab ='';
      data.forEach(element => {
+        var datee = new Date(element.date).toLocaleString('en-GB');
          tab += ` <tr>
                  <th scope="row">${element.id}</th>
                  <td>${element.partyName}</td>
-                 <td>${element.date}</td> 
+                 <td>${datee}</td> 
              </tr>
          </tbody>`
      });

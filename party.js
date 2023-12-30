@@ -52,9 +52,7 @@ function addDataFromModal() {
             headers: headers
         })
             .then((response) => response.json())
-            .then((json) => console.log(json));
-
-        location.reload();
+            .then(() => location.reload());
     }
     else {
         alert("Party Name is not valid");
@@ -66,12 +64,11 @@ async function editParty(id) {
     partyid = id;
     const response = await fetch(`https://localhost:7042/Party/${id}`, options);
     data = await response.json();
-    modaloldpartyname.innerText = data.partyName;
+    document.getElementById("modalpartyname").value = data.partyName;
 }
 
 
 function editDataFromModal() {
-    console.log(partyid);
     let partyname = document.getElementById("modalpartyname").value;
     fetch(`https://localhost:7042/Party/${partyid}`, {
         method: "PUT",
@@ -83,14 +80,15 @@ function editDataFromModal() {
     })
         .then(res => {
             if (res.ok) {
+                $('.fade').hide();
+                location.reload();
                 return res.json();
             }
             throw new Error("Something went wrong");
-        })
+        }) 
         .catch(error => console.log(error.body));
 
-    $('.fade').hide();
-    location.reload();
+   
 }
 
 async function deleteParty(id) {

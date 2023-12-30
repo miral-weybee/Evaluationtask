@@ -10,10 +10,10 @@ const options = {
     headers: headers,
 };
 
-var data , productid;
+var data, productid;
 
-async function loadData(){
-   productdata.innerHTML = '';
+async function loadData() {
+    productdata.innerHTML = '';
     data = await getProductData();
     data.forEach(element => {
         let html = `
@@ -32,36 +32,33 @@ async function loadData(){
 loadData();
 
 async function getProductData() {
-    const response = await fetch("https://localhost:7042/product",options)
+    const response = await fetch("https://localhost:7042/product", options)
     const productdata = await response.json();
     return productdata;
 }
 
-function addDataFromModal(){
+function addDataFromModal() {
     let productname = document.getElementById("modalnewproductname").value;
-    if(productname.trim().length !== 0 ){
+    if (productname.trim().length !== 0) {
         fetch("https://localhost:7042/Product", {
             method: "POST",
             body: JSON.stringify({
-              productName: productname
+                productName: productname
             }),
             headers: headers
-          })
-            
-          
-            location.reload();
+        }).then(() => location.reload())
     }
-    else{
+    else {
         alert("Product Name is not valid");
     }
 }
 
-async function editProduct(id){
-    id =  id.slice(11);
+async function editProduct(id) {
+    id = id.slice(11);
     productid = id;
-    const response = await fetch(`https://localhost:7042/Product/${id}`,options);
+    const response = await fetch(`https://localhost:7042/Product/${id}`, options);
     data = await response.json();
-    modaloldproductname.innerText = data.productName;
+    document.getElementById("modalproductname").value = data.productName;
 
 }
 
@@ -71,28 +68,26 @@ function editDataFromModal() {
     fetch(`https://localhost:7042/Product/${productid}`, {
         method: "PUT",
         body: JSON.stringify({
-            productId : productid,
+            productId: productid,
             productName: productname
         }),
         headers: headers
     })
         .then(res => {
-            if(res.ok){
-                
+            if (res.ok) {
+                $('.fade').hide();
+                location.reload();
                 return res.json();
             }
             throw new Error("Something went wrong");
         })
         .catch(error => console.log(error.body));
-
-        $('.fade').hide();
-        location.reload();
 }
 
-async function deleteProduct(id){
+async function deleteProduct(id) {
     id = id.slice(13);
     let ans = confirm("Are you sure you want to delete?");
-    if(ans){
+    if (ans) {
         const response = await fetch(`https://localhost:7042/Product/${id}`, {
             method: 'DELETE',
             headers: headers,

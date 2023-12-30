@@ -14,16 +14,15 @@ var data , productrateid;
 async function loadData(){
    productratedata.innerHTML = '';
     data = await getProductRateData();
-
     data.forEach(element => {
-
+        var date = new Date(element.dateOfRate.slice(0,10)).toLocaleString('en-GB');
         let html = `
          
         <tr>
         <th scope="row">${element.productRateId}</th>
         <td>${element.productName}</td>
         <td>${element.rate}</td>
-        <td>${element.dateOfRate.slice(0,10)}</td>
+        <td>${date.slice(0,10)}</td>
         <td id="btncontainer">
             <button id="productrateedit${element.productRateId}" class="btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="editProductRate(this.id)">Edit</button>
             <button id="productratedelete${element.productRateId}" class="btn btn-outline-danger" type="submit" onclick="deleteProductRate(this.id)">Delete</button>
@@ -55,6 +54,24 @@ async function fillProductData(selectProduct){
     })
 }
 
+async function fillProductEditData(productratedd){
+    fetch('https://localhost:7042/Product',options)
+                .then(response => response.json())
+                .then(data => {
+                    const productDropdown = document.getElementById('selectProductRatee');
+                    data.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.productId;
+                        option.text = product.productName;
+                        if (product.productName === productratedd) {
+                            option.selected = true;
+                        }
+                        productDropdown.add(option);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+}
+
 function addDataFromModal(){
     var ProductId = Number(document.getElementById('selectProductRate').value);
     var rateOfProduct = Number(document.getElementById('rate').value);
@@ -68,9 +85,7 @@ function addDataFromModal(){
                 dateOfRate:date
               }),
               headers: headers
-          })
-          
-            location.reload();
+          }).then(()=> location.reload())            
     }
     else{
         alert("Data is not valid");
@@ -82,11 +97,10 @@ async function editProductRate(id){
     productrateid = id;
     const response = await fetch(`https://localhost:7042/ProductRate/${id}`,options);
     data = await response.json();
-    fillProductData('selectProductRatee');
+    console.log(data);
+    fillProductEditData(data.productName);
     document.getElementById('ratee').value=data.rate;
-
 }
-
 
 function editDataFromModal() {
     let ProductId = Number(document.getElementById('selectProductRatee').value);
@@ -102,8 +116,8 @@ function editDataFromModal() {
                 dateOfRate : date
             }),
             headers: headers
-        })
-            location.reload();
+        }).then(()=>location.reload())
+            
     }else{
         alert("Invalid Data");
     }
