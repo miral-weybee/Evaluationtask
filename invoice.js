@@ -50,7 +50,7 @@ $('#addinvoicebtn').click(function(){
             { data: 'productName', title: 'Product Name' },
             { data: 'quantity', title: 'Quantity' },
             { data: 'rate', title: 'Rate' },
-            { data: 'total', title: 'total' },
+            { data: 'total', title: 'Total' },
         ]
     });
 
