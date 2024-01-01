@@ -159,7 +159,14 @@ async function loadData(){
          columns: [
              {data : 'invoiceId'},
              {data : 'partyName'},
-             {data : 'date'},
+             {data:  function(data, type, full) {
+                const dateObject = new Date(data.date);
+                const day = dateObject.getDate();
+                const month = dateObject.getMonth() + 1;
+                const year = dateObject.getFullYear();
+                const indianDateFormat = `${day}/${month}/${year}`;
+                return indianDateFormat;
+             }},
              {render: function (data, type, full) {
                  return `<td><button id="invoiceedit${full.invoiceId}" class="btn btn-outline-success" type="submit" onclick="viewData(this.id)">View</button>
                  <button id="invoicedelete${full.invoiceId}" class="btn btn-outline-danger" type="submit" onclick="deleteInvoice(this.id)">Delete</button>

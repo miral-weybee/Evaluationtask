@@ -58,44 +58,45 @@
     .invoice-table td {
       vertical-align: top;
     }
-    div.dataTables_wrapper div.dataTables_length select{
-width:50px !important;
-}
+
+    div.dataTables_wrapper div.dataTables_length select {
+      width: 50px !important;
+    }
   </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <div class="row">
-                <a class="navbar-brand" href="#">Party Product</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
-                    aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navbarScroll">
-                <ul id="topnav" class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                    <li class="nav-item">
-                        <a id="navparty" class="nav-link " aria-current="page" href="party.html">Party</a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="navproduct" class="nav-link" href="product.html">Product</a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="navassignparty" class="nav-link" href="assignparty.html">AssignParty</a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="navproductrate" class="nav-link" href="productrate.html">Product Rate</a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="navinvoice active" class="nav-link active" href="invoice.html">Invoice</a>
-                    </li>
-                </ul>
-            </div>
-            <button class="btn btn-outline-danger ml-auto" id="logout">Logout</button> 
-        </div>
-    </nav>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <div class="row">
+        <a class="navbar-brand" href="#">Party Product</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+          aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul id="topnav" class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <li class="nav-item">
+            <a id="navparty" class="nav-link " aria-current="page" href="party.html">Party</a>
+          </li>
+          <li class="nav-item">
+            <a id="navproduct" class="nav-link" href="product.html">Product</a>
+          </li>
+          <li class="nav-item">
+            <a id="navassignparty" class="nav-link" href="assignparty.html">AssignParty</a>
+          </li>
+          <li class="nav-item">
+            <a id="navproductrate" class="nav-link" href="productrate.html">Product Rate</a>
+          </li>
+          <li class="nav-item">
+            <a id="navinvoice active" class="nav-link active" href="invoice.html">Invoice</a>
+          </li>
+        </ul>
+      </div>
+      <button class="btn btn-outline-danger ml-auto" id="logout">Logout</button>
+    </div>
+  </nav>
 
   <div class="container" id="print">
     <div class="invoice-header">
@@ -123,78 +124,79 @@ width:50px !important;
       <tbody id="productsBody"></tbody>
     </table>
 
-    
+
   </div>
   <div class="container">
     <button id="PrintInvoice" class="btn btn-info">Print Invoice</button>
-    <button id="EditInvoice" class="btn btn-danger" data-toggle="modal" data-target="#staticBackdrop">Edit Invoice</button>
+    <button id="EditInvoice" class="btn btn-danger" data-toggle="modal" data-target="#staticBackdrop">Edit
+      Invoice</button>
     <hr>
   </div>
 
   <!-- edit modal -->
   <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticBackdropLabel" aria-hidden="true" style="--bs-modal-width: 1000px;">
-  <div class="modal-dialog">
+    aria-labelledby="staticBackdropLabel" aria-hidden="true" style="--bs-modal-width: 1000px;">
+    <div class="modal-dialog">
       <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Edit Invoice</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-4">
-                <form id="invoiceForm">
-                  <div class="mb-3">
-                    <label for="partyDropdown" class="form-label">Party</label>
-                    <select class="form-select" id="partyDropdown" name="partyId" required>
-                    </select>
-                  </div>
-                  <div id="productFields">
-                    <div class="product-field">
-                      <div class="mb-3">
-                        <label for="productDropdown" class="form-label">Product</label>
-                        <select class="form-select product-select" id="productDropdown" name="productId" required>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label for="productRate" class="form-label">Rate</label>
-                        <input type="number" class="form-control rate-input" id="productRate" name="productRate" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="quantity" class="form-label">Quantity</label>
-                        <input type="number" class="form-control rate-input" id="quantity" name="quantity" required>
-                      </div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Edit Invoice</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-4">
+              <form id="invoiceForm">
+                <div class="mb-3">
+                  <label for="partyDropdown" class="form-label">Party</label>
+                  <select class="form-select" id="partyDropdown" name="partyId" required>
+                  </select>
+                </div>
+                <div id="productFields">
+                  <div class="product-field">
+                    <div class="mb-3">
+                      <label for="productDropdown" class="form-label">Product</label>
+                      <select class="form-select product-select" id="productDropdown" name="productId" required>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="productRate" class="form-label">Rate</label>
+                      <input type="number" class="form-control rate-input" id="productRate" name="productRate" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="quantity" class="form-label">Quantity</label>
+                      <input type="number" class="form-control rate-input" id="quantity" name="quantity" required>
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-success" id="addProductBtn">Add Product</button>
-                </form>
-              </div>
-    
-              <div class="col-md-8">
-                <div class="table-container">
-                  <table id="invoiceTable" class="table table-striped table-bordered" style="width:100%">
-    
-                  </table>
-                  <div>Grand Total: <span id="grandTotal">0.00</span> </div>
                 </div>
-                <button id="EditGenerateInvoice" class="btn btn-danger mt-4">Edit Invoice</button>
-    
-              </div>
+                <button type="submit" class="btn btn-success" id="addProductBtn">Add Product</button>
+              </form>
             </div>
-    
-          </div>
-      </div>
-  </div>
-</div>
 
-<!-- product edit modal -->
-<div class="modal fade" id="productedit" data-bs-keyboard="false" tabindex="-1"
-aria-labelledby="producteditLabel" aria-hidden="true"  data-bs-backdrop="static" >
-<div class="modal-dialog">
-    <div class="modal-content">
+            <div class="col-md-8">
+              <div class="table-container">
+                <table id="invoiceTable" class="table table-striped table-bordered" style="width:100%">
+
+                </table>
+                <div>Grand Total: <span id="grandTotal">0.00</span> </div>
+              </div>
+              <button id="EditGenerateInvoice" class="btn btn-danger mt-4">Edit Invoice</button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- product edit modal -->
+  <div class="modal fade" id="productedit" data-bs-keyboard="false" tabindex="-1" aria-labelledby="producteditLabel"
+    aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">Edit Product</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title" id="staticBackdropLabel">Edit Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -209,7 +211,8 @@ aria-labelledby="producteditLabel" aria-hidden="true"  data-bs-backdrop="static"
                     </div>
                     <div class="mb-3">
                       <label for="productRate" class="form-label">Rate</label>
-                      <input type="number" class="form-control rate-input" id="pproductRate" name="productRate" required>
+                      <input type="number" class="form-control rate-input" id="pproductRate" name="productRate"
+                        required>
                     </div>
                     <div class="mb-3">
                       <label for="quantity" class="form-label">Quantity</label>
@@ -219,17 +222,18 @@ aria-labelledby="producteditLabel" aria-hidden="true"  data-bs-backdrop="static"
                 </div>
                 <div class="d-flex">
                   <button class="btn btn-success" id="editProductBtn">Edit Product</button>
-                  <button type="button" class="btn btn-info"  data-bs-dismiss="modal" id="cancelProductBtn">Cancel</button>
+                  <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                    id="cancelProductBtn">Cancel</button>
                 </div>
               </form>
             </div>
           </div>
-  
+
         </div>
+      </div>
     </div>
-</div>
-</div>
-<!-- product edit modal end -->
+  </div>
+  <!-- product edit modal end -->
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 
   <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -237,8 +241,8 @@ aria-labelledby="producteditLabel" aria-hidden="true"  data-bs-backdrop="static"
 
   <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script src="/Evaluationtask/authorization.js"></script>
+
+  <script src="/Evaluationtask/authorization.js"></script>
 </body>
 
 </html>
