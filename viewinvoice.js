@@ -103,11 +103,10 @@ $(document).ready(function () {
             total: parseInt($('#pquantity').val()) * parseInt($('#pproductRate').val())
           });
           $("#productedit").modal('hide');
-          row.remove().draw();
           updateDataTable();
         })
 
-
+        updateDataTable();
       });
 
       $('#invoiceTable').on('click', '.delete-btn', function () {
