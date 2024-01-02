@@ -12,6 +12,9 @@ const options = {
 var data, partyid;
 
 async function loadData() {
+    if(!token){
+        window.location = "http://127.0.0.1:5500/Evaluationtask/index.html"
+    }
     partydata.innerHTML = '';
     data = await getPartyData();
 
