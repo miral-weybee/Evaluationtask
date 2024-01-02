@@ -1,6 +1,6 @@
 const invoicedata = document.getElementById("invoicedata");
 
-var data , invoiceid;
+var data, invoiceid;
 
 const token = localStorage.getItem('token');
 const headers = {
@@ -11,7 +11,7 @@ const options = {
     method: 'GET',
     headers: headers,
 };
-$('#addinvoicebtn').click(function(){
+$('#addinvoicebtn').click(function () {
     let formData = {
         products: []
     };
@@ -63,9 +63,9 @@ $('#addinvoicebtn').click(function(){
             data: JSON.stringify({
                 partyId: formData.partyId,
                 Products: formData.products
-              }),
+            }),
             success: function (data) {
-               location.reload();
+                location.reload();
             },
             error: function (error) {
                 location.reload();
@@ -74,7 +74,7 @@ $('#addinvoicebtn').click(function(){
 
     });
 
-    
+
 
     fetch('https://localhost:7042/AssignParty', { headers: headers })
         .then(response => response.json())
@@ -140,77 +140,80 @@ $('#addinvoicebtn').click(function(){
 })
 
 
-async function loadData(){
+async function loadData() {
     invoicedata.innerHTML = '';
-     data = await getInvoiceData();
-     let tab ='';
-     data.forEach(element => {
+    data = await getInvoiceData();
+    let tab = '';
+    data.forEach(element => {
         var datee = new Date(element.date).toLocaleString('en-GB');
-         tab += ` <tr>
+        tab += ` <tr>
                  <th scope="row">${element.id}</th>
                  <td>${element.partyName}</td>
                  <td>${datee}</td> 
              </tr>
          </tbody>`
-     });
-     invoicedata.innerHTML = tab;
-     $("#tbl").dataTable({
-         data : data,
-         columns: [
-             {data : 'invoiceId'},
-             {data : 'partyName'},
-             {data:  function(data, type, full) {
-                const dateObject = new Date(data.date);
-                const day = dateObject.getDate();
-                const month = dateObject.getMonth() + 1;
-                const year = dateObject.getFullYear();
-                const indianDateFormat = `${day}/${month}/${year}`;
-                return indianDateFormat;
-             }},
-             {render: function (data, type, full) {
-                 return `<td><button id="invoiceedit${full.invoiceId}" class="btn btn-outline-success" type="submit" onclick="viewData(this.id)">View</button>
+    });
+    invoicedata.innerHTML = tab;
+    $("#tbl").dataTable({
+        data: data,
+        columns: [
+            { data: 'invoiceId' },
+            { data: 'partyName' },
+            {
+                data: function (data, type, full) {
+                    const dateObject = new Date(data.date);
+                    const day = dateObject.getDate();
+                    const month = dateObject.getMonth() + 1;
+                    const year = dateObject.getFullYear();
+                    const indianDateFormat = `${day}/${month}/${year}`;
+                    return indianDateFormat;
+                }
+            },
+            {
+                render: function (data, type, full) {
+                    return `<td><button id="invoiceedit${full.invoiceId}" class="btn btn-outline-success" type="submit" onclick="viewData(this.id)">View</button>
                  <button id="invoicedelete${full.invoiceId}" class="btn btn-outline-danger" type="submit" onclick="deleteInvoice(this.id)">Delete</button>
              </td>`;
-             
-             }}
-         ],
-         paging: false
-         
-     });
- 
- }
- loadData();
+
+                }
+            }
+        ],
+
+    });
+
+}
+loadData();
 
 async function getInvoiceData() {
-    const response = await fetch("https://localhost:7042/invoice",options)
+    const response = await fetch("https://localhost:7042/invoice", options)
     const data = await response.json();
     return data;
 }
 
-function viewData(id){
+function viewData(id) {
     var invoiceId = id.slice(11);
     window.location.href = 'viewInvoice.html?id=' + invoiceId;
 }
 
 
-async function fillPartyData(selectParty){
-    document.getElementById(selectParty).innerHTML ="";
-    const partydd = await fetch("https://localhost:7042/Party",options);
+async function fillPartyData(selectParty) {
+    document.getElementById(selectParty).innerHTML = "";
+    const partydd = await fetch("https://localhost:7042/Party", options);
     Partydata = await partydd.json();
     let first = `<option selected>Select Party</option>`
-    document.getElementById(selectParty).insertAdjacentHTML("beforeend",first)
-  Partydata.forEach(element => {
-      var html1=` <option value="${element.partyId}">${element.partyName}</option>`;
-      document.getElementById(selectParty).insertAdjacentHTML("beforeend",html1)
-  }) 
+    document.getElementById(selectParty).insertAdjacentHTML("beforeend", first)
+    Partydata.forEach(element => {
+        var html1 = ` <option value="${element.partyId}">${element.partyName}</option>`;
+        document.getElementById(selectParty).insertAdjacentHTML("beforeend", html1)
+    })
 }
 
 
-async function deleteInvoice(id){
+async function deleteInvoice(id) {
     id = id.slice(13);
     console.log(id);
     let ans = confirm("Are you sure you want to delete?");
-    if(ans){
+    if (ans) {
         const response = await fetch(`https://localhost:7042/Invoice/${id}`, {
             method: 'DELETE',
             headers: headers,
