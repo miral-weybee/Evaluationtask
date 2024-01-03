@@ -1,6 +1,6 @@
 const invoicedata = document.getElementById("invoicedata");
 
-var data, invoiceid;
+var data, invoiceid, datatbl;
 
 const token = localStorage.getItem('token');
 const headers = {
@@ -157,7 +157,7 @@ async function loadData() {
          </tbody>`
     });
     invoicedata.innerHTML = tab;
-    $("#tbl").dataTable({
+    datatbl = $("#tbl").dataTable({
         data: data,
         columns: [
             { data: 'invoiceId' },
@@ -180,8 +180,7 @@ async function loadData() {
 
                 }
             }
-        ],
-
+        ]
     });
 
 }
@@ -226,3 +225,37 @@ async function deleteInvoice(id) {
     }
 }
 
+$('#rangesearch').click(function (e) {
+    e.preventDefault();
+    fetch(`https://localhost:7042/invoice/date?startdate=${$('#startdate').val()}&&enddate=${$('#enddate').val()}`, { headers: headers })
+        .then(response => response.json())
+        .then(res => {
+            datatbl.fnDestroy();
+            datatbl.dataTable({
+                data: res,
+                columns: [
+                    { data: 'invoiceId' },
+                    { data: 'partyName' },
+                    {
+                        data: function (data, type, full) {
+                            const dateObject = new Date(data.date);
+                            const day = dateObject.getDate();
+                            const month = dateObject.getMonth() + 1;
+                            const year = dateObject.getFullYear();
+                            const indianDateFormat = `${day}/${month}/${year}`;
+                            return indianDateFormat;
+                        }
+                    },
+                    {
+                        render: function (data, type, full) {
+                            return `<td><button id="invoiceedit${full.invoiceId}" class="btn btn-outline-success" type="submit" onclick="viewData(this.id)">View</button>
+                         <button id="invoicedelete${full.invoiceId}" class="btn btn-outline-danger" type="submit" onclick="deleteInvoice(this.id)">Delete</button>
+                     </td>`;
+        
+                        }
+                    }
+                ]
+            });
+        })
+        .catch(error => console.log(error));
+})
